@@ -1,6 +1,6 @@
 {
   "name": "mobile-emu-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CLI tool to list and launch Android Emulators and iOS Simulators easily",
   "type": "module",
   "main": "./dist/index.js",
