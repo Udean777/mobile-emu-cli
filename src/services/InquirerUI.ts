@@ -1,5 +1,9 @@
 import { select } from "@inquirer/prompts";
-import type { EmulatorInfo, IUserInterface, Platform } from "../types.js";
+import type {
+  EmulatorInfo,
+  IUserInterface,
+  Platform,
+} from "../shared/types.js";
 
 // ============================================================================
 // Platform Display Names
@@ -76,5 +80,12 @@ export class InquirerUI implements IUserInterface {
    */
   showError(msg: string): void {
     console.error(`❌ ${msg}`);
+  }
+
+  /**
+   * Shows a success message
+   */
+  showSuccess(msg: string): void {
+    console.log(`✅ ${msg}`);
   }
 }

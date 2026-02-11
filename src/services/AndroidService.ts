@@ -3,7 +3,7 @@ import type {
   ICommandExecutor,
   IEmulatorService,
   Platform,
-} from "../types.js";
+} from "../shared/types.js";
 
 // ============================================================================
 // Android Emulator Service
@@ -17,7 +17,7 @@ export class AndroidService implements IEmulatorService {
   /**
    * Checks if Android SDK emulator is available
    */
-  async isAvailable(): Promise<boolean> {
+  async checkAvailability(): Promise<boolean> {
     try {
       const result = await this.commandExecutor.execute("emulator", [
         "-list-avds",

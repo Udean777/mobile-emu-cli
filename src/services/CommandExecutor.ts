@@ -1,5 +1,9 @@
 import { execSync, spawn as nodeSpawn } from "node:child_process";
-import type { CommandResult, ICommandExecutor, IValidator } from "../types.js";
+import type {
+  CommandResult,
+  ICommandExecutor,
+  IValidator,
+} from "../shared/types.js";
 
 // ============================================================================
 // Security Constants
@@ -46,6 +50,16 @@ export class InputValidator implements IValidator {
   }
 
   /**
+   * Validates that the command is in the whitelist
+   */
+  validateCommand(command: string): boolean {
+    const sanitizedCommand = this.sanitize(command);
+    return ALLOWED_COMMANDS.includes(
+      sanitizedCommand as (typeof ALLOWED_COMMANDS)[number],
+    );
+  }
+
+  /**
    * Sanitizes input by removing potentially dangerous characters
    */
   sanitize(input: string): string {
@@ -58,6 +72,22 @@ export class InputValidator implements IValidator {
       .replace(/\0/g, "")
       .replace(/[\x00-\x1F\x7F]/g, "")
       .trim();
+  }
+
+  /**
+   * Sanitizes arguments to prevent injection
+   */
+  sanitizeArgs(args: string[]): string[] {
+    return args.map((arg) => {
+      const sanitized = this.sanitize(arg);
+
+      // Check for shell metacharacters that could be used for injection
+      if (/[;&|`$()]/.test(sanitized)) {
+        throw new Error(`Argument contains invalid characters: ${arg}`);
+      }
+
+      return sanitized;
+    });
   }
 }
 
@@ -76,7 +106,10 @@ export class SecureCommandExecutor implements ICommandExecutor {
    * Validates that the command is in the whitelist
    */
   private validateCommand(command: string): void {
-    const sanitizedCommand = this.validator.sanitize(command);
+    const sanitizedCommand =
+      this.validator instanceof InputValidator
+        ? (this.validator as InputValidator).sanitize(command)
+        : command.trim();
 
     if (
       !ALLOWED_COMMANDS.includes(
@@ -92,13 +125,18 @@ export class SecureCommandExecutor implements ICommandExecutor {
    */
   private sanitizeArgs(args: readonly string[]): string[] {
     return args.map((arg) => {
-      const sanitized = this.validator.sanitize(arg);
+      // Use internal sanitize method
+      const sanitized =
+        this.validator instanceof InputValidator
+          ? (this.validator as InputValidator).sanitize(arg)
+          : arg.trim(); // Fallback if validator doesn't expose sanitize
 
       // Check for shell metacharacters that could be used for injection
       if (/[;&|`$()]/.test(sanitized)) {
         throw new Error(`Argument contains invalid characters: ${arg}`);
       }
 
+      return sanitized;
       return sanitized;
     });
   }

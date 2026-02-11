@@ -3,7 +3,7 @@ import type {
   ICommandExecutor,
   IEmulatorService,
   Platform,
-} from "../types.js";
+} from "../shared/types.js";
 
 // ============================================================================
 // iOS Simulator Service
@@ -23,7 +23,7 @@ export class IOSService implements IEmulatorService {
   /**
    * Checks if Xcode Command Line Tools are available
    */
-  async isAvailable(): Promise<boolean> {
+  async checkAvailability(): Promise<boolean> {
     try {
       const result = await this.commandExecutor.execute("xcrun", [
         "simctl",

@@ -1,4 +1,8 @@
-import type { ICommandExecutor, IEmulatorService, Platform } from "../types.js";
+import type {
+  ICommandExecutor,
+  IEmulatorService,
+  Platform,
+} from "../shared/types.js";
 import { AndroidService } from "./AndroidService.js";
 import { IOSService } from "./IOSService.js";
 
@@ -43,8 +47,8 @@ export class EmulatorServiceFactory {
     const iosService = new IOSService(this.commandExecutor);
 
     const [androidAvailable, iosAvailable] = await Promise.all([
-      androidService.isAvailable(),
-      iosService.isAvailable(),
+      androidService.checkAvailability(),
+      iosService.checkAvailability(),
     ]);
 
     if (androidAvailable) {

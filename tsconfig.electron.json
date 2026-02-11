@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "dist/electron",
+    "rootDir": ".",
+    "noEmit": false,
+    "verbatimModuleSyntax": false
+  },
+  "include": ["electron/**/*", "src/services/**/*", "src/shared/**/*", "src/index.ts"],
+  "exclude": ["src/renderer", "vite.config.ts"]
+}

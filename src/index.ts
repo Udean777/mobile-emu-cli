@@ -1,16 +1,16 @@
 #!/usr/bin/env node
-import type {
-  IEmulatorService,
-  IUserInterface,
-  Platform,
-  EmulatorInfo,
-} from "./types.js";
+
 import { EmulatorServiceFactory } from "./services/EmulatorServiceFactory.js";
 import { InquirerUI } from "./services/InquirerUI.js";
 import {
   InputValidator,
   SecureCommandExecutor,
 } from "./services/CommandExecutor.js";
+import type {
+  IEmulatorService,
+  IUserInterface,
+  Platform,
+} from "./shared/types.js";
 
 // ============================================================================
 // CLI Arguments Parser
@@ -186,11 +186,11 @@ class App {
     }
 
     const platformEmoji = platform === "android" ? "🤖" : "🍎";
-    this.ui.showMessage(`🚀 Launching ${device.name}...`);
+    this.ui.showSuccess(`🚀 Launching ${device.name}...`);
 
     await service.launch(device);
 
-    this.ui.showMessage(
+    this.ui.showSuccess(
       `${platformEmoji} ✅ Success. You can close this terminal.`,
     );
   }
@@ -222,13 +222,13 @@ class App {
           return;
         }
         platform = preselectedPlatform;
-        this.ui.showMessage(
+        this.ui.showSuccess(
           `📱 Using ${platform === "android" ? "Android" : "iOS"}...`,
         );
       } else if (availablePlatforms.length === 1) {
         // If only one platform available, use it directly
         platform = availablePlatforms[0]!;
-        this.ui.showMessage(
+        this.ui.showSuccess(
           `📱 Using ${platform === "android" ? "Android" : "iOS"}...`,
         );
       } else {
@@ -254,11 +254,11 @@ class App {
 
       // Step 6: Launch
       const platformEmoji = platform === "android" ? "🤖" : "🍎";
-      this.ui.showMessage(`🚀 Launching ${selected.name}...`);
+      this.ui.showSuccess(`🚀 Launching ${selected.name}...`);
 
       await service.launch(selected);
 
-      this.ui.showMessage(
+      this.ui.showSuccess(
         `${platformEmoji} ✅ Success. You can close this terminal.`,
       );
     } catch (error: unknown) {

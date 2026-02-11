@@ -3,7 +3,7 @@
   "version": "1.0.2",
   "description": "CLI tool to list and launch Android Emulators and iOS Simulators easily",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "dist/electron/electron/main.js",
   "types": "./dist/index.d.ts",
   "bin": {
     "mobile-emu": "./dist/index.js"
@@ -12,7 +12,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -b src/renderer/tsconfig.json && vite build && tsc -p tsconfig.electron.json",
+    "dev": "concurrently \"vite\" \"wait-on tcp:5173 && tsc -p tsconfig.electron.json -w\" \"wait-on tcp:5173 && wait-on dist/electron/electron/main.js && electron .\"",
+    "start": "electron .",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -45,10 +47,46 @@
     "win32"
   ],
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "^25.2.0",
-    "typescript": "^5.9.3"
+    "@types/react": "^19.2.13",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.4",
+    "autoprefixer": "^10.4.24",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^40.3.0",
+    "electron-builder": "^26.7.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "wait-on": "^9.0.3"
   },
   "dependencies": {
-    "@inquirer/prompts": "^8.2.0"
+    "@inquirer/prompts": "^8.2.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "build": {
+    "appId": "com.sajudin.mobile-emu",
+    "productName": "Mobile Emu",
+    "directories": {
+      "output": "release/${version}"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": ["dmg", "zip"]
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   }
 }

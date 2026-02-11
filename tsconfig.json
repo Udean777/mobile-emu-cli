@@ -40,5 +40,6 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  }
+  },
+  "exclude": ["dist", "node_modules", "electron", "vite.config.ts", "tailwind.config.js", "postcss.config.js", "src/renderer"]
 }
